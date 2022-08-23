@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <time.h>
 
@@ -8,6 +9,11 @@
 #define COPY_TO_A_CLIPBOARD "\
 #/bin/bash \n\
 xclip -sel c < temp.passt \n\
+"
+
+#define RUN_KEEPASSXC "\
+#/bin/bash \n\
+sudo keepassxc \n\
 "
 
 #define PASS_FILE "password.passt"
@@ -26,32 +32,64 @@ static void genKey();
 static void getPassword();
 static void updKey();
 static void updPassword();
+static void helpInfo();
 
 int main( int argc, char** argv )
 {
-	int in;
-
+    
+    /*
+     
+    printf( "argv = %s\n", argv[1] );
+    if( strcmp( argv[1], "-get" ) == 0)
+        printf( "wlad" );
+    return 0;
+     
+    */
+    
+    if( argc > 3 )
+        { printf( "\n( ! ) [ THE NUMBER OF ARGUMENTS SHOULD BE EQUAL TO 1 ]\n\n" ); return 1; }
+    
+    if( argc == 1 )
+        { helpInfo(); return 0; }
+    
 	FILE* f = fopen( PASS_FILE, "r" );
 	FILE* b = fopen( KEY_FILE, "r" );
-	if( isEmpty( f ) == 0 && isEmpty( b ) == 0)
+	if( isEmpty( f ) == 0 && isEmpty( b ) == 0 && ( strcmp( argv[1], "-init" ) == 0 ))
 	{
+        //printf( "You here!\n" );
 		fclose( f );
 		fclose( b );
 
-		printf( "Please, make up a key\n" );
-		scanf( "%s", buffer );
+		printf( "\n[ SET UP THE PASSWORD ]\n\n[password]: " );
+		
+        size_t i = 0;
+        system( "stty -echo" );
+        for( ; i < SIZE; i++ )
+        {
+            if( i == 0 )
+            { scanf( " %c", &buffer[ i ] ); printf( "*" ) ;continue; } 
+            scanf( "%c", &buffer[ i ] );
+            printf( "*" );
+        }
+        printf( "\n" );
+        system( "stty echo" );
+        
+        //scanf( "%s", buffer );
+        
 		genKey();
+        printf( "( * ) [ THE PASSWORD HAS SUCCESFULLY BEEN SET ]\n" );
 	}
+// 	//else printf( "\n[ THE PASSWORD ALREADY EXISTS ]\n" );            !!!     !!!
 
 	setBuffer();
 	setKey();
 
-	printf( "What are you suppose to do?\n" );
-	printf( "1. Get password ot the clipborad\n2. Update the keys\n3. Set new password\n" );
+	//printf( "What are you suppose to do?\n" );
+	//printf( "1. Get password ot the clipborad\n2. Update the keys\n3. Set new password\n" );
 
-	scanf( "%d", &in );
+	//scanf( "%d", &in );
 
-	switch( in )
+	/*switch( in )
 	{
 		case 1:
 			getPassword();
@@ -62,7 +100,17 @@ int main( int argc, char** argv )
 		case 3:
 			updPassword();
 			break;
-	}
+	}*/
+    
+    if( strcmp( argv[1], "-get" ) == 0)
+        { getPassword(); system( RUN_KEEPASSXC ); }
+    else if( strcmp( argv[1], "-u" ) == 0)
+        updKey();
+    else if( strcmp( argv[1], "-new" ) == 0)
+        updPassword();
+    else if( isEmpty( f ) != 0 && isEmpty( b ) != 0 && strcmp( argv[1], "-init" ) == 0 )
+        { printf( "\n( ! ) [ THE PASSWORD ALREADY EXISTS ]\n\n" ); }
+    else printf( "\n( ! ) [UNKNOWN ARGUMENT = ( %s )]\n\n", argv[1] );
 
 	return 0;
 }
@@ -109,17 +157,11 @@ static void setPassword()
 	char p_password[ SIZE ];
 	otp( 1, buffer, key, SIZE, p_password );
 
-	/* int i = 0;
-	for( ; i < SIZE; i++ )
-	{
-		fprintf( f, "%c", p_password[ i ] );
-	}*/
-
 	fprintf( f, "%s", p_password );
 
 	fclose( f );
 
-	printf( "*** The password has successfully been set ***\n" );
+	//printf( "\n3 [ THE PASSWORD HAS SUCCESFULLY BEEN SET ]\n\n" );
 }
 
 static void genKey()
@@ -141,7 +183,7 @@ static void genKey()
 	fclose( f );
 	setPassword();
 
-	printf( "*** A key has successfully been updated ***\n" );
+	printf( "\n( * ) [ THE KEY HAS SUCCESFULLY BEEN GENERATED ]\n\" );
 }
 
 static void getPassword()
@@ -157,22 +199,25 @@ static void getPassword()
 
 	system( COPY_TO_A_CLIPBOARD );
 
-	if( remove( PAST_FILE ) == 0 )
-		printf( "*** Password has successfully been copied to the clipboard ***\n" );
-	else printf( "AN ERROR OCCURED\n" );
+	if( remove( PAST_FILE ) == 0) // ==0 removed
+		printf( "\n( * ) [ THE PASSWORD HAS SUCCESFULLY BEEN COPIED TO THE CLIPBOARD ]\n\n" );
+	else printf( "\n( ! ) [ AN ERROR OCCURED ]\n\n" );
 }
 
 static void updKey()
 {
 	otp( -1, buffer, key, SIZE, buffer );
+    //printf( "2 " );
 	genKey();
 }
 
 static void updPassword()
 {
 	int i = 0;
-
-	system( "stty -echo" );
+    
+    printf( "\n[ SET UP THE NEW PASSWORD ]\n\n[password*]: " );
+	
+    system( "stty -echo" );
 	for( ; i < SIZE; i++ )
 	{
 		if( i == 0 )
@@ -184,4 +229,10 @@ static void updPassword()
 	system( "stty echo" );
 
 	genKey();
+    printf( "( * ) [ THE PASSWORD HAS SUCCESFULLY BEEN SET ]\n\n" );
+}
+
+static void helpInfo()
+{
+    printf( "\npasst — is a simple utility for KeePassXC purposed on keeping the password of KeePass database in safety.\n\n\nOptions:\n\n\t-init      Set up a password\n\t-get       Copy password to the clipboard\n\t-u         Update the key\n\t-new       Set up a new password\n\nwladislawmakowski/passt is licensed under the GNU General Public License v3.0\n" );
 }
