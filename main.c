@@ -176,7 +176,7 @@ static void updPassword()
 	for( ; i < SIZE; i++ )
 	{
 		if( i == 0 )
-		{ scanf( " %c", &buffer[ i ] ); printf( "*" ) ;continue; } // i+=1 added
+		{ scanf( " %c", &buffer[ i ] ); printf( "*" ) ;continue; } 
 		scanf( "%c", &buffer[ i ] );
 		printf( "*" );
 	}
