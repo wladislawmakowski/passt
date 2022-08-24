@@ -36,16 +36,6 @@ static void helpInfo();
 
 int main( int argc, char** argv )
 {
-    
-    /*
-     
-    printf( "argv = %s\n", argv[1] );
-    if( strcmp( argv[1], "-get" ) == 0)
-        printf( "wlad" );
-    return 0;
-     
-    */
-    
     if( argc > 3 )
         { printf( "\n( ! ) [ THE NUMBER OF ARGUMENTS SHOULD BE EQUAL TO 1 ]\n\n" ); return 1; }
     
@@ -56,7 +46,6 @@ int main( int argc, char** argv )
 	FILE* b = fopen( KEY_FILE, "r" );
 	if( isEmpty( f ) == 0 && isEmpty( b ) == 0 && ( strcmp( argv[1], "-init" ) == 0 ))
 	{
-        //printf( "You here!\n" );
 		fclose( f );
 		fclose( b );
 
@@ -74,34 +63,13 @@ int main( int argc, char** argv )
         printf( "\n" );
         system( "stty echo" );
         
-        //scanf( "%s", buffer );
-        
-		genKey();
+	genKey();
         printf( "( * ) [ THE PASSWORD HAS SUCCESFULLY BEEN SET ]\n" );
 	}
-// 	//else printf( "\n[ THE PASSWORD ALREADY EXISTS ]\n" );            !!!     !!!
 
 	setBuffer();
 	setKey();
 
-	//printf( "What are you suppose to do?\n" );
-	//printf( "1. Get password ot the clipborad\n2. Update the keys\n3. Set new password\n" );
-
-	//scanf( "%d", &in );
-
-	/*switch( in )
-	{
-		case 1:
-			getPassword();
-			break;
-		case 2:
-			updKey();
-			break;
-		case 3:
-			updPassword();
-			break;
-	}*/
-    
     if( strcmp( argv[1], "-get" ) == 0)
         { getPassword(); system( RUN_KEEPASSXC ); }
     else if( strcmp( argv[1], "-u" ) == 0)
@@ -160,8 +128,6 @@ static void setPassword()
 	fprintf( f, "%s", p_password );
 
 	fclose( f );
-
-	//printf( "\n3 [ THE PASSWORD HAS SUCCESFULLY BEEN SET ]\n\n" );
 }
 
 static void genKey()
@@ -207,7 +173,6 @@ static void getPassword()
 static void updKey()
 {
 	otp( -1, buffer, key, SIZE, buffer );
-    //printf( "2 " );
 	genKey();
 }
 
