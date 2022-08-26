@@ -1,5 +1,5 @@
 # ![ logo ](https://github.com/wladislawmakowski/passt/blob/master/Logo.png) &ensp; passt
-> passt — is a simple utility for KeePassXC purposed on keeping the password of KeePass database in safety
+> passt — is a simple utility for KeePassXC purposed on keeping the password of the KeePass database in safety
 
 ### Options:
 
@@ -72,6 +72,7 @@ $ sudo passt -get
 ( * ) [ THE PASSWORD HAS SUCCESFULLY BEEN COPIED TO THE CLIPBOARD ]
 
 QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+
 $
 ```
 
