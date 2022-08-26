@@ -56,7 +56,7 @@ int main( int argc, char** argv )
         for( ; i < SIZE; i++ )
         {
             if( i == 0 )
-            { scanf( " %c", &buffer[ i ] ); printf( "*" ) ;continue; } 
+            { scanf( " %c", &buffer[ i ] ); printf( "*" ); continue; } 
             scanf( "%c", &buffer[ i ] );
             printf( "*" );
         }
@@ -65,7 +65,9 @@ int main( int argc, char** argv )
         
 	genKey();
         printf( "( * ) [ THE PASSWORD HAS SUCCESFULLY BEEN SET ]\n" );
-	}
+	} 
+	else if( isEmpty( f ) != 0 && isEmpty( b ) != 0 && strcmp( argv[1], "-init" ) == 0 )
+        { printf( "\n( ! ) [ THE PASSWORD ALREADY EXISTS ]\n\n" ); }
 
 	setBuffer();
 	setKey();
@@ -76,9 +78,8 @@ int main( int argc, char** argv )
         updKey();
     else if( strcmp( argv[1], "-new" ) == 0)
         updPassword();
-    else if( isEmpty( f ) != 0 && isEmpty( b ) != 0 && strcmp( argv[1], "-init" ) == 0 )
-        { printf( "\n( ! ) [ THE PASSWORD ALREADY EXISTS ]\n\n" ); }
-    else printf( "\n( ! ) [UNKNOWN ARGUMENT = ( %s )]\n\n", argv[1] );
+    else  if( strcmp( argv[1], "-init") != 0 )
+        printf( "\n( ! ) [UNKNOWN ARGUMENT = ( %s )]\n\n", argv[1] );
 
 	return 0;
 }
@@ -87,7 +88,7 @@ static void setBuffer()
 {
 	FILE* f = fopen( PASS_FILE, "r" );
 
-	int i;
+	size_t i;
 	for( i = 0; i < SIZE; i++ )
 	{
 		fscanf( f, "%c", &buffer[ i ] );
@@ -100,7 +101,7 @@ static void setKey()
 {
 	FILE* f = fopen( KEY_FILE, "r" );
 
-	int i;
+	size_t i;
 	for( i = 0; i < SIZE; i++ )
 	{
 		fscanf( f, "%d.", &key[ i ]);
@@ -149,7 +150,7 @@ static void genKey()
 	fclose( f );
 	setPassword();
 
-	printf( "\n( * ) [ THE KEY HAS SUCCESFULLY BEEN GENERATED ]\n\" );
+	printf( "\n( * ) [ THE KEY HAS SUCCESFULLY BEEN GENERATED ]\n" );
 }
 
 static void getPassword()
@@ -165,7 +166,7 @@ static void getPassword()
 
 	system( COPY_TO_A_CLIPBOARD );
 
-	if( remove( PAST_FILE ) == 0) // ==0 removed
+	if( remove( PAST_FILE ) == 0 )
 		printf( "\n( * ) [ THE PASSWORD HAS SUCCESFULLY BEEN COPIED TO THE CLIPBOARD ]\n\n" );
 	else printf( "\n( ! ) [ AN ERROR OCCURED ]\n\n" );
 }

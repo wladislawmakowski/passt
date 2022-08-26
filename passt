@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /home/user/Security/passt
+./main $1
