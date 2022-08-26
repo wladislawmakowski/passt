@@ -1,4 +1,4 @@
-# ![ logo ](https://github.com/wladislawmakowski/passt/blob/master/Logo.png) emsb passt
+# ![ logo ](https://github.com/wladislawmakowski/passt/blob/master/Logo.png) *emsb* passt
 > passt — is a simple utility for KeePassXC purposed on keeping the password of KeePass database in safety
 
 ### Options:
